@@ -7,17 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		201A625D1D1B50D4008B183B /* soundgenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201A625C1D1B50D4008B183B /* soundgenerator.swift */; };
+		203FF2841D1B65B300954C5F /* chord.wav in Resources */ = {isa = PBXBuildFile; fileRef = 203FF2831D1B65B300954C5F /* chord.wav */; };
 		207C3A0A1D0F953900751DF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 207C3A091D0F953900751DF8 /* AppDelegate.swift */; };
 		207C3A0C1D0F953900751DF8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 207C3A0B1D0F953900751DF8 /* ViewController.swift */; };
 		207C3A0F1D0F953900751DF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 207C3A0D1D0F953900751DF8 /* Main.storyboard */; };
 		207C3A111D0F953A00751DF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 207C3A101D0F953A00751DF8 /* Assets.xcassets */; };
 		207C3A141D0F953A00751DF8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 207C3A121D0F953A00751DF8 /* LaunchScreen.storyboard */; };
-		207C3A1D1D101E5900751DF8 /* soundgenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 207C3A1C1D101E5900751DF8 /* soundgenerator.swift */; };
 		207C3A231D1177E800751DF8 /* GMStereo.sf2 in Resources */ = {isa = PBXBuildFile; fileRef = 207C3A221D1177E800751DF8 /* GMStereo.sf2 */; };
 		207C3A251D12270800751DF8 /* stab.wav in Resources */ = {isa = PBXBuildFile; fileRef = 207C3A241D12270800751DF8 /* stab.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		201A625C1D1B50D4008B183B /* soundgenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = soundgenerator.swift; sourceTree = "<group>"; };
+		203FF2831D1B65B300954C5F /* chord.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = chord.wav; sourceTree = "<group>"; };
 		207C3A061D0F953900751DF8 /* musicSequence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = musicSequence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		207C3A091D0F953900751DF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		207C3A0B1D0F953900751DF8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -25,7 +28,6 @@
 		207C3A101D0F953A00751DF8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		207C3A131D0F953A00751DF8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		207C3A151D0F953A00751DF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		207C3A1C1D101E5900751DF8 /* soundgenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = soundgenerator.swift; path = ../soundgenerator.swift; sourceTree = "<group>"; };
 		207C3A221D1177E800751DF8 /* GMStereo.sf2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = GMStereo.sf2; sourceTree = "<group>"; };
 		207C3A241D12270800751DF8 /* stab.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = stab.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,11 +63,12 @@
 			isa = PBXGroup;
 			children = (
 				207C3A091D0F953900751DF8 /* AppDelegate.swift */,
-				207C3A1C1D101E5900751DF8 /* soundgenerator.swift */,
+				201A625C1D1B50D4008B183B /* soundgenerator.swift */,
 				207C3A0B1D0F953900751DF8 /* ViewController.swift */,
 				207C3A221D1177E800751DF8 /* GMStereo.sf2 */,
 				207C3A0D1D0F953900751DF8 /* Main.storyboard */,
 				207C3A241D12270800751DF8 /* stab.wav */,
+				203FF2831D1B65B300954C5F /* chord.wav */,
 				207C3A101D0F953A00751DF8 /* Assets.xcassets */,
 				207C3A121D0F953A00751DF8 /* LaunchScreen.storyboard */,
 				207C3A151D0F953A00751DF8 /* Info.plist */,
@@ -136,6 +139,7 @@
 				207C3A111D0F953A00751DF8 /* Assets.xcassets in Resources */,
 				207C3A0F1D0F953900751DF8 /* Main.storyboard in Resources */,
 				207C3A231D1177E800751DF8 /* GMStereo.sf2 in Resources */,
+				203FF2841D1B65B300954C5F /* chord.wav in Resources */,
 				207C3A251D12270800751DF8 /* stab.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,7 +153,7 @@
 			files = (
 				207C3A0C1D0F953900751DF8 /* ViewController.swift in Sources */,
 				207C3A0A1D0F953900751DF8 /* AppDelegate.swift in Sources */,
-				207C3A1D1D101E5900751DF8 /* soundgenerator.swift in Sources */,
+				201A625D1D1B50D4008B183B /* soundgenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

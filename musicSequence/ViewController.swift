@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         
         //now make some nores and put them on the track
         var beat = MusicTimeStamp(1.0)
-        for i:UInt8 in 60...72{
+        for i:UInt8 in 60...76{
             var mess = MIDINoteMessage(channel: 0,
                                        note: i,
                                        velocity:  64,
@@ -78,14 +78,71 @@ class ViewController: UIViewController {
     @IBAction func play(sender: UIButton) {
         gen.play()
     }
-    @IBAction func playNoteOn(sender: AnyObject) {
-        gen.playNoteOn(noteNum: 60, velocity: 100)
+ 
+    @IBAction func playNoteOn(sender: UIButton) {
+        
+        if (sender.backgroundColor != UIColor.blue())
+        {
+        gen.playNoteOn(beat:Float(sender.tag), noteNum: 60, velocity: 100)
+            sender.backgroundColor = UIColor.blue()
+        
+        }else if(sender.backgroundColor != UIColor.green()) {
+            sender.backgroundColor = UIColor.green()
+            gen.removeNoteOn(beat: Float(sender.tag))
+            
+        }
+
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+    
+    @IBOutlet weak var b1:UIButton!
+    @IBOutlet weak var b2:UIButton!
+    @IBOutlet weak var b3:UIButton!
+    @IBOutlet weak var b4:UIButton!
+    @IBOutlet weak var b5:UIButton!
+    @IBOutlet weak var b6:UIButton!
+    @IBOutlet weak var b7:UIButton!
+    @IBOutlet weak var b8:UIButton!
+    @IBOutlet weak var b9:UIButton!
+    @IBOutlet weak var b10:UIButton!
+    @IBOutlet weak var b11:UIButton!
+    @IBOutlet weak var b12:UIButton!
+    @IBOutlet weak var b13:UIButton!
+    @IBOutlet weak var b14:UIButton!
+    @IBOutlet weak var b15:UIButton!
+    @IBOutlet weak var b16:UIButton!
+    
+    @IBOutlet var bpmLabel: UILabel!
+    
+
+    @IBAction func bpmChange(_ sender: UISlider) {
+        gen.changeTempo(bpm: Double(sender.value))
+        bpmLabel.text = String(Int(sender.value))
+        
+    }
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -12,9 +12,12 @@ import CoreAudio
 //import AVFoundation
 class SoundGenerator {
     var samplerUnit:AudioUnit? = nil
+    var samplerUnit2:AudioUnit? = nil
+    
     var musicPlayer:MusicPlayer? = nil
     var musicSequence:MusicSequence? = nil
     var processingGraph:AUGraph? = nil
+    
     
     init() {
 //        self.processingGraph = AUGraph()
@@ -23,7 +26,7 @@ class SoundGenerator {
         augraphSetup()
         graphStart()
         loadSF2Preset(preset: 0)
-        
+        loadSF2Preset2(preset: 1)
         //or loadDLSPreset(0)
         
         self.musicSequence = createMusicSequence()
@@ -40,7 +43,7 @@ class SoundGenerator {
         //create sampler
         //To create the sampler and add it to the graph, you need to create an AudioComponentDescription.
         var samplerNode = AUNode()
-        
+        var samplerNode2 = AUNode()
         var cd:AudioComponentDescription = AudioComponentDescription(
             componentType: OSType(kAudioUnitType_MusicDevice),
             componentSubType: OSType(kAudioUnitSubType_Sampler),
@@ -48,6 +51,7 @@ class SoundGenerator {
             componentFlags: 0,
             componentFlagsMask: 0)
         status = AUGraphAddNode(self.processingGraph!, &cd , &samplerNode)
+        status = AUGraphAddNode(self.processingGraph!, &cd , &samplerNode2)
         CheckError(error: status)
         
         //Create an output node in the same manner.
@@ -69,6 +73,8 @@ class SoundGenerator {
         CheckError(error: status)
         
         status = AUGraphNodeInfo(self.processingGraph!, samplerNode, nil, &self.samplerUnit)
+        CheckError(error: status)
+        status = AUGraphNodeInfo(self.processingGraph!, samplerNode2, nil, &self.samplerUnit2)
         CheckError(error: status)
         
         var ioUnit:AudioUnit? = nil
@@ -110,7 +116,7 @@ class SoundGenerator {
     
     
     func loadSF2Preset(preset:UInt8)  {
-        guard let bankURL = Bundle.main().urlForResource("stab", withExtension: ".wav") else{
+        guard let bankURL = Bundle.main().urlForResource("kick15", withExtension: ".m4a") else{
             fatalError("\"soundfont not found.")
         }
         var instdata = AUSamplerInstrumentData(fileURL: Unmanaged.passUnretained(bankURL),
@@ -118,6 +124,23 @@ class SoundGenerator {
                                                bankMSB: UInt8(kAUSampler_DefaultMelodicBankMSB),
                                                bankLSB: UInt8(kAUSampler_DefaultBankLSB),
                                                presetID: preset)
+        let status = AudioUnitSetProperty(self.samplerUnit2!,
+                                          AudioUnitPropertyID(kAUSamplerProperty_LoadInstrument),
+                                          AudioUnitScope(kAudioUnitScope_Global), 0,
+                                          &instdata,
+                                          UInt32(sizeof(AUSamplerInstrumentData)))
+        CheckError(error: status)
+    }
+    
+    func loadSF2Preset2(preset:UInt8)  {
+        guard let bankURL = Bundle.main().urlForResource("snareLoop", withExtension: ".m4a") else{
+            fatalError("\"soundfont not found.")
+        }
+        var instdata = AUSamplerInstrumentData(fileURL: Unmanaged.passUnretained(bankURL),
+                                               instrumentType: UInt8(kInstrumentType_Audiofile),//kInstrumentType_SF2Preset
+                                                bankMSB: UInt8(kAUSampler_DefaultMelodicBankMSB),
+                                                bankLSB: UInt8(kAUSampler_DefaultBankLSB),
+                                                presetID: preset)
         let status = AudioUnitSetProperty(self.samplerUnit!,
                                           AudioUnitPropertyID(kAUSamplerProperty_LoadInstrument),
                                           AudioUnitScope(kAudioUnitScope_Global), 0,
@@ -125,8 +148,11 @@ class SoundGenerator {
                                           UInt32(sizeof(AUSamplerInstrumentData)))
         CheckError(error: status)
     }
-    var track:MusicTrack? = nil
     
+    
+    
+    var track:MusicTrack? = nil
+    var track2:MusicTrack? = nil
     func createMusicSequence() -> MusicSequence {
         // create the sequence
         var musicSequence:MusicSequence? = nil
@@ -144,12 +170,18 @@ class SoundGenerator {
             CheckError(error: status)
         }
         
+        status = MusicSequenceNewTrack(musicSequence!, &track2)
+        if status != OSStatus(noErr) {
+            print("error creating track \(status)")
+            CheckError(error: status)
+        }
+        
         // now make some notes and put them on the track
-        var beat = MusicTimeStamp(1.0)
-        for i:UInt8 in 60...72 {
+        var beat = MusicTimeStamp(0.0)
+        for i:UInt8 in 60...75 {
             var mess = MIDINoteMessage(channel: 0,
-                                       note: i,
-                                       velocity: 64,
+                                       note: 70,
+                                       velocity: 50,
                                        releaseVelocity: 0,
                                        duration: 1.0 )
             status = MusicTrackNewMIDINoteEvent(track!, beat, &mess)
@@ -160,46 +192,91 @@ class SoundGenerator {
             beat += 1
             
         }
+        for i:UInt8 in 60...75 {
+            var mess = MIDINoteMessage(channel: 1,
+                                       note: 50,
+                                       velocity: 80,
+                                       releaseVelocity: 0,
+                                       duration: 1.0 )
+            status = MusicTrackNewMIDINoteEvent(track2!, beat, &mess)
+            //putNoteOn(0.0)
+            if status != OSStatus(noErr) {
+                CheckError(error: status)
+            }
+            beat += 1
+            
+        }
         
-        loopTrack(musicTrack: track!)
-        
+//        loopTrack(musicTrack: track!)
+        loopTrack(musicTrack: track2!)
         // associate the AUGraph with the sequence.
         MusicSequenceSetAUGraph(musicSequence!, self.processingGraph)
         
         return musicSequence!
     }
-    func putNoteOn(beat:Double)  {
-        
-        var mess2 = MIDINoteMessage(channel: 0,
-                                    note: 50,
-                                    velocity: 64,
-                                    releaseVelocity: 0,
-                                    duration: 1.0 )
-        var status = MusicTrackNewMIDINoteEvent(track!, 0.0, &mess2)
-        if status != OSStatus(noErr) {
-            CheckError(error: status)
-        }
-        print(status)
-        print("touches1")
-        
-       
-    }
 
-    func playNoteOn(noteNum:UInt32, velocity:UInt32){
-        let noteCommand = UInt32(0x90 | 0)
+
+    func playNoteOn(beat:Float, noteNum:UInt32, velocity:UInt32){
+        //let noteCommand = UInt32(0x90 | 0)
         var status = OSStatus(noErr)
-        status = MusicDeviceMIDIEvent(self.samplerUnit!, noteCommand, noteNum, velocity, 0)
+        //status = MusicDeviceMIDIEvent(self.samplerUnit!, noteCommand, noteNum, velocity, 0)
         CheckError(error: status)
         print("noteon status is \(status)")
-        var track:MusicTrack? = nil
+       // var track:MusicTrack? = nil
         var mess = MIDINoteMessage(channel: 0,
-                                   note: 50,
-                                   velocity: 64,
+                                   note: 59,
+                                   velocity: 127,
                                    releaseVelocity: 0,
                                    duration: 1.0 )
-        status = MusicTrackNewMIDINoteEvent(track!, 0.0, &mess)
+        status = MusicTrackNewMIDINoteEvent(track!, MusicTimeStamp(beat), &mess)
+        if status != OSStatus(noErr){
+                print("bad status \(status) creating nore event")
+            
+        }
         
+    }
+    
+    func removeNoteOn(beat:Float){
+        MusicTrackClear(track!, MusicTimeStamp(beat), MusicTimeStamp(beat + 1.0))
+    }
+    
+    func changeTempo(bpm: Float64){
+        setTempo(sequence: musicSequence!, tempo: bpm)
+    }
+    func setTempo(sequence: MusicSequence,tempo: Float64){
+//        MusicTrack tempoTrack;
+//        MusicSequenceGetTempoTrack(sequence ,&tempoTrack);
+//        removeTempoEvents(tempoTrack);
+//        MusicTrackNewExtendedTempoEvent(tempoTrack,0, tempo);
         
+        var tempoTrack:MusicTrack? = nil
+        MusicSequenceGetTempoTrack(sequence, &tempoTrack)
+        removeTempoEvents(musicTrack: tempoTrack!)
+        MusicTrackNewExtendedTempoEvent(tempoTrack!, 0, tempo)
+    }
+    
+    func removeTempoEvents(musicTrack:MusicTrack){
+        var tempIter:MusicEventIterator? = nil
+        NewMusicEventIterator(track!, &tempIter)
+        var hasEvent:DarwinBoolean? = nil
+        MusicEventIteratorHasCurrentEvent(tempIter!, &hasEvent!)
+        while ((hasEvent) != nil) {
+            var stamp:MusicTimeStamp? = nil
+            var type:MusicEventType? = nil
+            var data:UnsafePointer<Void>? = nil
+            var sizeData:UInt32? = nil
+            
+            MusicEventIteratorGetEventInfo(tempIter!, &stamp!, &type!, &data, &sizeData!)
+            if(type == kMusicEventType_ExtendedTempo){
+                MusicEventIteratorDeleteEvent(tempIter!)
+                MusicEventIteratorHasCurrentEvent(tempIter!, &hasEvent!)
+            }
+            else{
+                MusicEventIteratorNextEvent(tempIter!)
+                MusicEventIteratorHasCurrentEvent(tempIter!, &hasEvent!)
+            }
+        }
+        DisposeMusicEventIterator(tempIter!)
     }
     
     func createPlayer(musicSequence:MusicSequence) -> MusicPlayer {
