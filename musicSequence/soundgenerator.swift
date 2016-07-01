@@ -9,15 +9,16 @@
 import Foundation
 import AudioToolbox
 import CoreAudio
-//import AVFoundation
+
 class SoundGenerator {
     var samplerUnit:AudioUnit? = nil
     var samplerUnit2:AudioUnit? = nil
-    
+  
     var musicPlayer:MusicPlayer? = nil
     var musicSequence:MusicSequence? = nil
     var processingGraph:AUGraph? = nil
     
+
     
     init() {
 //        self.processingGraph = AUGraph()
@@ -26,7 +27,7 @@ class SoundGenerator {
         augraphSetup()
         graphStart()
         loadSF2Preset(preset: 0)
-        loadSF2Preset2(preset: 1)
+        //loadSF2Preset2(preset: 1)
         //or loadDLSPreset(0)
         
         self.musicSequence = createMusicSequence()
@@ -43,15 +44,26 @@ class SoundGenerator {
         //create sampler
         //To create the sampler and add it to the graph, you need to create an AudioComponentDescription.
         var samplerNode = AUNode()
-        var samplerNode2 = AUNode()
+        //var samplerNode2 = AUNode()
         var cd:AudioComponentDescription = AudioComponentDescription(
             componentType: OSType(kAudioUnitType_MusicDevice),
             componentSubType: OSType(kAudioUnitSubType_Sampler),
             componentManufacturer: OSType(kAudioUnitManufacturer_Apple),
             componentFlags: 0,
             componentFlagsMask: 0)
+        
+        
         status = AUGraphAddNode(self.processingGraph!, &cd , &samplerNode)
-        status = AUGraphAddNode(self.processingGraph!, &cd , &samplerNode2)
+       // status = AUGraphAddNode(self.processingGraph!, &cd , &samplerNode2)
+        CheckError(error: status)
+        var mixerNode = AUNode()
+        var mixer:AudioComponentDescription = AudioComponentDescription(
+            componentType: OSType(kAudioUnitType_Mixer),
+            componentSubType: OSType(kAudioUnitSubType_MultiChannelMixer),
+            componentManufacturer: OSType(kAudioUnitManufacturer_Apple),
+            componentFlags: 0,
+            componentFlagsMask: 0)
+        status = AUGraphAddNode(self.processingGraph!, &mixer , &mixerNode)
         CheckError(error: status)
         
         //Create an output node in the same manner.
@@ -64,9 +76,10 @@ class SoundGenerator {
             componentManufacturer: OSType(kAudioUnitManufacturer_Apple),
             componentFlags: 0,
             componentFlagsMask: 0)
+        
         status = AUGraphAddNode(self.processingGraph!, &ioUnitDescription, &ioNode)
         CheckError(error: status)
-        
+    
         //Now to wire the nodes together and init the AudioUnits. The graph needs to be open, so we do that first.
         //Then I obtain references to the audio units with the function AUGraphNodeInfo.
         status = AUGraphOpen(self.processingGraph!)
@@ -74,7 +87,8 @@ class SoundGenerator {
         
         status = AUGraphNodeInfo(self.processingGraph!, samplerNode, nil, &self.samplerUnit)
         CheckError(error: status)
-        status = AUGraphNodeInfo(self.processingGraph!, samplerNode2, nil, &self.samplerUnit2)
+        
+        //status = AUGraphNodeInfo(self.processingGraph!, samplerNode2, nil, &self.samplerUnit2)
         CheckError(error: status)
         
         var ioUnit:AudioUnit? = nil
@@ -85,11 +99,16 @@ class SoundGenerator {
         //Now wire them using AUGraphConnectNodeInput.
         let ioUnitOutputElement = AudioUnitElement(0)
         let samplerOutputElement = AudioUnitElement(0)
+//        status = AUGraphConnectNodeInput(
+//            self.processingGraph!,
+//            samplerNode, samplerOutputElement,//source node
+//            ioNode, ioUnitOutputElement)//destination node
+//            CheckError(error: status)
         status = AUGraphConnectNodeInput(
             self.processingGraph!,
             samplerNode, samplerOutputElement,//source node
             ioNode, ioUnitOutputElement)//destination node
-            CheckError(error: status)
+        CheckError(error: status)
     }
     
     
@@ -124,7 +143,7 @@ class SoundGenerator {
                                                bankMSB: UInt8(kAUSampler_DefaultMelodicBankMSB),
                                                bankLSB: UInt8(kAUSampler_DefaultBankLSB),
                                                presetID: preset)
-        let status = AudioUnitSetProperty(self.samplerUnit2!,
+        let status = AudioUnitSetProperty(self.samplerUnit!,
                                           AudioUnitPropertyID(kAUSamplerProperty_LoadInstrument),
                                           AudioUnitScope(kAudioUnitScope_Global), 0,
                                           &instdata,
@@ -141,7 +160,7 @@ class SoundGenerator {
                                                 bankMSB: UInt8(kAUSampler_DefaultMelodicBankMSB),
                                                 bankLSB: UInt8(kAUSampler_DefaultBankLSB),
                                                 presetID: preset)
-        let status = AudioUnitSetProperty(self.samplerUnit!,
+        let status = AudioUnitSetProperty(self.samplerUnit2!,
                                           AudioUnitPropertyID(kAUSamplerProperty_LoadInstrument),
                                           AudioUnitScope(kAudioUnitScope_Global), 0,
                                           &instdata,
@@ -180,8 +199,8 @@ class SoundGenerator {
         var beat = MusicTimeStamp(0.0)
         for i:UInt8 in 60...75 {
             var mess = MIDINoteMessage(channel: 0,
-                                       note: 70,
-                                       velocity: 50,
+                                       note: 67,
+                                       velocity: 0,
                                        releaseVelocity: 0,
                                        duration: 1.0 )
             status = MusicTrackNewMIDINoteEvent(track!, beat, &mess)
@@ -190,12 +209,13 @@ class SoundGenerator {
                 CheckError(error: status)
             }
             beat += 1
-            
+            print(beat)
         }
+         beat = MusicTimeStamp(0.0)
         for i:UInt8 in 60...75 {
             var mess = MIDINoteMessage(channel: 1,
-                                       note: 50,
-                                       velocity: 80,
+                                       note: 60,
+                                       velocity: 0,
                                        releaseVelocity: 0,
                                        duration: 1.0 )
             status = MusicTrackNewMIDINoteEvent(track2!, beat, &mess)
@@ -204,10 +224,11 @@ class SoundGenerator {
                 CheckError(error: status)
             }
             beat += 1
-            
+            print(beat)
+
         }
         
-//        loopTrack(musicTrack: track!)
+        loopTrack(musicTrack: track!)
         loopTrack(musicTrack: track2!)
         // associate the AUGraph with the sequence.
         MusicSequenceSetAUGraph(musicSequence!, self.processingGraph)
@@ -228,7 +249,7 @@ class SoundGenerator {
                                    velocity: 127,
                                    releaseVelocity: 0,
                                    duration: 1.0 )
-        status = MusicTrackNewMIDINoteEvent(track!, MusicTimeStamp(beat), &mess)
+        status = MusicTrackNewMIDINoteEvent(track2!, MusicTimeStamp(beat), &mess)
         if status != OSStatus(noErr){
                 print("bad status \(status) creating nore event")
             

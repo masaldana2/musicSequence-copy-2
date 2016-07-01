@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		201A625D1D1B50D4008B183B /* soundgenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201A625C1D1B50D4008B183B /* soundgenerator.swift */; };
 		203FF2841D1B65B300954C5F /* chord.wav in Resources */ = {isa = PBXBuildFile; fileRef = 203FF2831D1B65B300954C5F /* chord.wav */; };
+		203FF28A1D1D53F900954C5F /* kick15.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 203FF2891D1D53F900954C5F /* kick15.m4a */; };
+		203FF28C1D1D541E00954C5F /* snareLoop.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 203FF28B1D1D541E00954C5F /* snareLoop.m4a */; };
 		207C3A0A1D0F953900751DF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 207C3A091D0F953900751DF8 /* AppDelegate.swift */; };
 		207C3A0C1D0F953900751DF8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 207C3A0B1D0F953900751DF8 /* ViewController.swift */; };
 		207C3A0F1D0F953900751DF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 207C3A0D1D0F953900751DF8 /* Main.storyboard */; };
@@ -21,6 +23,8 @@
 /* Begin PBXFileReference section */
 		201A625C1D1B50D4008B183B /* soundgenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = soundgenerator.swift; sourceTree = "<group>"; };
 		203FF2831D1B65B300954C5F /* chord.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = chord.wav; sourceTree = "<group>"; };
+		203FF2891D1D53F900954C5F /* kick15.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = kick15.m4a; sourceTree = "<group>"; };
+		203FF28B1D1D541E00954C5F /* snareLoop.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = snareLoop.m4a; sourceTree = "<group>"; };
 		207C3A061D0F953900751DF8 /* musicSequence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = musicSequence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		207C3A091D0F953900751DF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		207C3A0B1D0F953900751DF8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +72,8 @@
 				207C3A221D1177E800751DF8 /* GMStereo.sf2 */,
 				207C3A0D1D0F953900751DF8 /* Main.storyboard */,
 				207C3A241D12270800751DF8 /* stab.wav */,
+				203FF2891D1D53F900954C5F /* kick15.m4a */,
+				203FF28B1D1D541E00954C5F /* snareLoop.m4a */,
 				203FF2831D1B65B300954C5F /* chord.wav */,
 				207C3A101D0F953A00751DF8 /* Assets.xcassets */,
 				207C3A121D0F953A00751DF8 /* LaunchScreen.storyboard */,
@@ -135,6 +141,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				203FF28C1D1D541E00954C5F /* snareLoop.m4a in Resources */,
+				203FF28A1D1D53F900954C5F /* kick15.m4a in Resources */,
 				207C3A141D0F953A00751DF8 /* LaunchScreen.storyboard in Resources */,
 				207C3A111D0F953A00751DF8 /* Assets.xcassets in Resources */,
 				207C3A0F1D0F953900751DF8 /* Main.storyboard in Resources */,
@@ -269,7 +277,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = musicSequence/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Miguel.musicSequence;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -281,7 +289,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = musicSequence/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Miguel.musicSequence;
 				PRODUCT_NAME = "$(TARGET_NAME)";
